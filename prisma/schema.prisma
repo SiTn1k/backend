@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  telegramId    BigInt   @unique
+  username      String?
+  firstName     String
+  lastName      String?
+  photoUrl      String?
+  languageCode  String?
+  createdAt     DateTime @default(now())
+
+  activities    Activity[]
+  donations     Donation[]
+  achievements  Achievement[]
+  artifactViews ArtifactView[]
+}
+
+model Activity {
+  id           String   @id @default(uuid())
+  userId       String
+
+  sessionStart DateTime
+  sessionEnd   DateTime?
+  minutesSpent Int?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Donation {
+  id            String   @id @default(uuid())
+  userId        String
+
+  amount        Decimal
+  currency      String
+  paymentMethod String
+  transactionId String?
+  status        String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Achievement {
+  id             String   @id @default(uuid())
+  userId         String
+  achievementKey String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ArtifactView {
+  id         String   @id @default(uuid())
+  userId     String
+  artifactId String
+
+  viewedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
