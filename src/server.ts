@@ -5,7 +5,12 @@ import { prisma } from "./prisma";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: ['https://unrivaled-brigadeiros-ce6749.netlify.app', 'https://virtual-museum-api.onrender.com', 'https://*.netlify.app'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 app.use(express.json());
 app.use("/auth", authRoutes);
 
